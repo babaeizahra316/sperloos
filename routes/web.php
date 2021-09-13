@@ -14,5 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return 'My app is running';
 });
+
+Route::resource('/post', App\Http\Controllers\PostController::class);
