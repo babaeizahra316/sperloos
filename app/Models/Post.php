@@ -14,10 +14,10 @@ class Post extends Model
      *
      * @var string[]
      */
-    protected $fillable = [
-        'user_id',
-        'title',
-        'thumbnail',
-        'content',
-    ];
+    protected $guarded = [];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
