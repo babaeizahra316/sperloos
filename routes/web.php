@@ -17,4 +17,14 @@ Route::get('/', function () {
     return 'My app is running';
 });
 
-Route::resource('/post', App\Http\Controllers\PostController::class);
+Route::get('/post', [App\Http\Controllers\PostController::class, 'index'])->name('post.index');
+Route::get('/post/create/{user}', [App\Http\Controllers\PostController::class, 'create'])->name('post.create');
+Route::post('/post/{user}', [App\Http\Controllers\PostController::class, 'store'])->name('post.store');
+Route::get('/post/{post}', [App\Http\Controllers\PostController::class, 'show'])->name('post.show');
+Route::get('/post/{user}/edit/{post}', [App\Http\Controllers\PostController::class, 'edit'])->name('post.edit');
+Route::put('/post/{user}/{post}', [App\Http\Controllers\PostController::class, 'update'])->name('post.update');
+Route::delete('/post/{user}/{post}', [App\Http\Controllers\PostController::class, 'destroy'])->name('post.destroy');
+
+
+
+
