@@ -52,7 +52,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
-        return ($user->id)%2 != 1;
+        return $user->id == $post->user_id && ($user->id)%2 != 1;
     }
 
     /**
@@ -64,7 +64,7 @@ class PostPolicy
      */
     public function delete(User $user, Post $post)
     {
-        return ($user->id)%2 != 1;
+        return $user->id == $post->user_id && ($user->id)%2 != 1;
     }
 
     /**

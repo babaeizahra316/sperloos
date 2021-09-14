@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Spatie\Image\Image;
 
 class PostController extends Controller
 {
@@ -42,12 +43,15 @@ class PostController extends Controller
         if (Gate::forUser($user)->allows('create', Post::class))
         {
             $data = $request->validate([
-                'user_id'=>['required'],
                 'title'=>['required'],
                 'thumbnail'=>['required', 'image'],
                 'content'=>['required']
             ]);
+            $imagePath = request('thumbnail')->store('images', 'public');
+            $data['thumbnail'] = $imagePath;
             $post = $user->posts()->create($data);
+            $post->addMediaFromRequest('thumbnail')
+                ->toMediaCollection('images');
             return response(['status_code'=>200,'status_text'=>'success','data'=>$post]);
         }
         abort(403);
@@ -76,11 +80,21 @@ class PostController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(User $user, Post $post, Request $request)
+    public function update(User $user, Post $post, Request  $request)
     {
         if (Gate::forUser($user)->allows('update', $post))
         {
-            $post->update($request->all());
+            $imagePath = '';
+            $array = $request->all();
+            if ($request->has('thumbnail'))
+            {
+                $imagePath = request('thumbnail')->store('images', 'public');
+                $post->addMediaFromRequest('thumbnail')
+                    ->toMediaCollection('images');
+                $array = array_merge($request->all(), ['thumbnail' => $imagePath]);
+
+            }
+            $post->update($array);
             return response(['status_code'=>200,'status_text'=>'success','data'=>$post]);
         }
         abort(403);
@@ -93,7 +107,7 @@ class PostController extends Controller
     {
         if (Gate::forUser($user)->allows('delete', $post))
         {
-            $post->destroy();
+            $post->delete();
             return response(['status_code'=>200,'status_text'=>'success','data'=>null]);
         }
         abort(403);
