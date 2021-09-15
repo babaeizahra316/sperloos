@@ -24,7 +24,7 @@ class PostFactory extends Factory
     {
         return [
             'title' => $this->faker->text(20),
-            'thumbnail' => $this->faker->image('public/storage/images',400,400),
+            'thumbnail' => $this->faker->image('public/storage/images',100,100),
             'content' => $this->faker->text(),
         ];
     }
